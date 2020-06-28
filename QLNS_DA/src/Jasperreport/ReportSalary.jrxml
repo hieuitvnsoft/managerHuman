@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fd591684-fbf1-47cc-86ba-aa370c66bb0e">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Detail" fontName="Arial" fontSize="12" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<parameter name="date1" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2018-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2018-01-31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="iddep" class="java.lang.String">
+		<defaultValueExpression><![CDATA["AC004"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NameDep" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Phòng Kế Toán"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[2018-01]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT dbo.tblEmployee.IdEmp, dbo.tblEmployee.NameEmp, dbo.tblPosition.NamePosition, dbo.tblRankSalaryBasic.SalaryBasic, dbo.tblRankSalary.Coefficient,DL,(SalaryBasic/24)*DL*Coefficient as TT
+FROM dbo.tblEmployee INNER JOIN
+                         dbo.tblPosition ON dbo.tblEmployee.IdPosition = dbo.tblPosition.IdPosition INNER JOIN
+                         dbo.tblDeparment ON dbo.tblEmployee.IdDepartment = dbo.tblDeparment.IdDepartment INNER JOIN
+                         dbo.tblRankSalary ON dbo.tblEmployee.IdRankSalary = dbo.tblRankSalary.Id INNER JOIN
+                         dbo.tblRankSalaryBasic ON dbo.tblEmployee.IdSalaryBasic = dbo.tblRankSalaryBasic.Id,
+(select IdEmp,count(tblTimekeeping.IdEmp) as DL
+	from tblTimekeeping 
+	where  tblTimekeeping.Status=1 
+		and tblTimekeeping.DateTimekeeping between $P{date1} and $P{date2} group by tblTimekeeping.IdEmp) as chamcong
+WHERE tblEmployee.IdEmp = chamcong.idEmp and tblEmployee.IdDepartment=$P{iddep}]]>
+	</queryString>
+	<field name="IdEmp" class="java.lang.String"/>
+	<field name="NameEmp" class="java.lang.String"/>
+	<field name="NamePosition" class="java.lang.String"/>
+	<field name="SalaryBasic" class="java.lang.Double"/>
+	<field name="Coefficient" class="java.lang.Double"/>
+	<field name="DL" class="java.lang.Integer"/>
+	<field name="TT" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="145" y="0" width="262" height="20" forecolor="#3300FF" backcolor="#FFFF99" uuid="2bc42ec3-4ed5-4305-b0ef-9ae084a1d4b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Công ty TNHH Software BKAP]]></text>
+			</staticText>
+			<image>
+				<reportElement x="3" y="0" width="100" height="59" uuid="bfe72c15-6d8d-4fa0-bab4-278e7e1d084c"/>
+				<imageExpression><![CDATA["F:\\C1608I\\II\\Java\\Sw1\\QLNS_DA full\\QLNS_DA\\src\\image\\photo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="173" y="37" width="40" height="20" uuid="6a70d989-dd03-4a6d-acde-fd3dcd204429"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Tháng:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="386" y="37" width="53" height="20" uuid="048ab596-3334-4289-be35-0b51c5b309fc"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Bộ phận:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="228" y="37" width="100" height="20" uuid="7d135fa0-8b0e-4cfc-a9a1-a71b01c2c56f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="455" y="37" width="100" height="20" uuid="567626e7-1b3e-419b-8616-5931f5c26633"/>
+				<textElement>
+					<font fontName="UTM Seagull"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NameDep}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="0" width="552" height="37" backcolor="#99FFCC" uuid="256e66e2-6e04-4a77-9b93-561e72aa92cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BÁO CÁO THANH TOÁN LƯƠNG CHO NHÂN VIÊN]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="45" height="20" uuid="8763c6da-49bf-4bc5-accc-644aea593b39"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mã NV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="55" y="0" width="107" height="20" uuid="815070ee-8358-4efe-a717-cf0023f79976"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tên nhân viên]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="238" y="0" width="90" height="20" uuid="c351340e-a787-4171-9414-f0e2955dc2cb"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lương cơ bản]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="0" width="53" height="20" uuid="fc7f5bfc-7f7f-4b19-946f-3cbb9365fbcf"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hệ số]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="407" y="0" width="59" height="20" uuid="cf8134c5-2690-491c-8770-36c20420dc07"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số công]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="0" width="79" height="20" uuid="5b9bd75f-5eb2-49f9-be69-4c7569e78816"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng lương]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="173" y="0" width="55" height="20" uuid="d0757d0a-bd1c-45ee-b905-33f22d510b6d"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chức vụ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="45" height="20" uuid="5d5b2817-dafc-4747-afed-24656e1f4f91"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IdEmp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="0" width="107" height="20" uuid="5c489d54-9515-41a4-87a4-62b11c030c6e"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NameEmp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="176" y="0" width="52" height="20" uuid="63e80137-91a1-4922-9c96-9e200c67e9d0"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NamePosition}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="0" width="90" height="20" uuid="3956d42e-0603-4a13-ac19-48c9a19c626b"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SalaryBasic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="343" y="0" width="53" height="20" uuid="5bbb18c4-0804-4775-9565-fea47088e863"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Coefficient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="407" y="0" width="59" height="20" uuid="2de5f4b2-1caa-4127-a613-5e921efeaec4"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="476" y="0" width="79" height="20" uuid="3ff808eb-9678-4dd2-938f-594f3f08e151"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="455" y="0" width="51" height="20" uuid="70c294fa-027e-403c-af9e-b4ece808097f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Giám đốc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="0" width="73" height="20" uuid="ae365d31-2efe-43e9-8050-c036b175159e"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Kế toán trưởng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="0" width="100" height="20" uuid="da743e33-8315-41b3-b0b4-ca2fb7d7e3e5"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Người xuất báo cáo]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
